@@ -7,6 +7,7 @@ import type { Asset } from '../asset.ts';
 import type { ConditionEqOperator } from '../graphics/index.ts';
 import type { AppearanceItems, IItemCreationContext, IItemLoadContext, IItemValidationContext } from '../item/index.ts';
 import type { IAssetModuleTypes, ModuleType } from '../modules.ts';
+import type { AssetDefinitionFreezeType } from '../definitions.ts';
 
 type StaticConfigDataHelper<TStaticData> = TStaticData extends undefined ? {
 	staticConfig?: TStaticData;
@@ -19,6 +20,11 @@ export type IModuleConfigCommon<Type extends ModuleType, TProperties = unknown, 
 	type: Type;
 	/** The display name of this module */
 	name: string;
+	/**
+	 * Whether this module can be edited on frozen items.
+	 * Considered AssetDefinitionFreezeType.CONFIGURATION when not set.
+	 */
+	freezeType?: AssetDefinitionFreezeType;
 	/**
 	 * Name used for displaying this module in the expressions menu.
 	 * If set to a non-empty string, then this module appears in the list of expressions.

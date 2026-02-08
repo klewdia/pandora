@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { ActionTargetSelectorSchema, ItemPathSchema } from '../../../assets/appearanceTypes.ts';
+import { AssetDefinitionFreezeType } from '../../../assets/definitions.ts';
 import { ItemColorBundleSchema } from '../../../assets/item/base.ts';
 import { ItemInteractionType } from '../../../character/restrictionTypes.ts';
 import type { AppearanceActionProcessingResult } from '../appearanceActionProcessingContext.ts';
@@ -24,6 +25,14 @@ export function ActionColor({
 	if (!target)
 		return processingContext.invalid();
 	const item = target.getItem(action.item);
+	// Setup colors cannot be changed on a frozen item
+	if (item?.frozen && ('colorization' in item.asset.definition && item.asset.definition.colorization !== undefined)) {
+		for (const [colorId, color] of Object.entries(action.color)) {
+			if (item.asset.definition.colorization[colorId]?.freezeType === AssetDefinitionFreezeType.SETUP && item.color[colorId] !== color) {
+				return processingContext.invalid('cannotModifyFrozenItem');
+			}
+		}
+	}
 	// To manipulate the color of deployed room devices, player must have appropriate space role
 	if (item?.isType('roomDevice') && item.isDeployed()) {
 		processingContext.checkPlayerHasSpaceRole(processingContext.getEffectiveRoomSettings(action.target.type === 'room' ? action.target.roomId : null).roomDeviceDeploymentMinimumRole);

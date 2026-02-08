@@ -8,7 +8,8 @@ export type InvalidActionReason =
 	| 'noDeleteDeployedRoomDevice'
 	| 'noDeleteOccupiedRoom'
 	| 'characterMoveCannotFollow'
-	| 'characterMoveCannotFollowTarget';
+	| 'characterMoveCannotFollowTarget'
+	| 'cannotModifyFrozenItem';
 
 export type AppearanceActionProblem =
 	| {

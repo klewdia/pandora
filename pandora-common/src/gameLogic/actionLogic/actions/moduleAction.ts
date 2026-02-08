@@ -1,6 +1,7 @@
 import * as z from 'zod';
 import { ActionTargetSelectorSchema, ItemPathSchema } from '../../../assets/appearanceTypes.ts';
 import { ItemModuleActionSchema } from '../../../assets/modules.ts';
+import { AssetDefinitionFreezeType } from '../../../assets/definitions.ts';
 import type { AppearanceActionProcessingResult } from '../appearanceActionProcessingContext.ts';
 import type { AppearanceModuleActionContext } from '../appearanceActions.ts';
 import type { AppearanceActionHandlerArg } from './_common.ts';
@@ -29,7 +30,12 @@ export function ActionModuleAction({
 	const item = target.getItem(action.item);
 	if (!item)
 		return processingContext.invalid();
-
+	// Setup modules cannot be modified on a frozen item
+	if (item?.frozen && ('modules' in item.asset.definition && item.asset.definition.modules !== undefined && action.module in item.asset.definition.modules)) {
+		if (item.asset.definition.modules[action.module].freezeType === AssetDefinitionFreezeType.SETUP) {
+			return processingContext.invalid('cannotModifyFrozenItem');
+		}
+	}
 	// Player doing the action must be able to interact with the item
 	processingContext.checkCanUseItemModule(target, action.item, action.module, item.moduleActionGetInteractionType(action.module, action.action));
 

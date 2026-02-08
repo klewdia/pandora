@@ -85,6 +85,8 @@ export function RenderAppearanceActionProblem(assetManager: AssetManager, result
 					return `The character cannot currently follow another character. Only characters outside of room devices that are not being followed can follow someone.`;
 				case 'characterMoveCannotFollowTarget':
 					return `The target character cannot be followed. Only characters in a room that are not following someone can be followed.`;
+				case 'cannotModifyFrozenItem':
+					return `The item is frozen and this property cannot be modified anymore`;
 			}
 			AssertNever(result.reason);
 		}

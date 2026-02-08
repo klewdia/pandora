@@ -64,10 +64,31 @@ export type AssetDefinitionPoseLimits<A extends AssetDefinitionExtraArgs = Asset
 	options?: [AssetDefinitionPoseLimits<A>, AssetDefinitionPoseLimits<A>, ...AssetDefinitionPoseLimits<A>[]];
 };
 
+/**
+ * Describes if a property can be editable once an item is frozen.
+ */
+export enum AssetDefinitionFreezeType {
+	/**
+	 * Setup properties cannot be modified when the item is frozen.
+	 * I.e. fixed devices, size variation...
+	 */
+	SETUP,
+	/**
+	 * Configuration properties are always modifiable. Default value.
+	 * I.e. position, removable devices...
+	 */
+	CONFIGURATION,
+}
+
 export interface AssetColorization<A extends AssetDefinitionExtraArgs = AssetDefinitionExtraArgs> {
 	/** Name that describes the meaning of this color to user, `null` if it cannot be colored by user */
 	name: string | null;
 	default: HexRGBAColorString;
+	/**
+	 * Whether this color can be edited on frozen items.
+	 * Considered AssetDefinitionFreezeType.CONFIGURATION when not set.
+	 */
+	freezeType?: AssetDefinitionFreezeType;
 	/**
 	 * Color inheritance group
 	 * If name is `null`, the color will always be inherited from this group, otherwise it depends on the item properties

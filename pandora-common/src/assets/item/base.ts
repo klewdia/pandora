@@ -36,6 +36,16 @@ export type ItemTypeMap =
 
 export type Item<Type extends AssetType = AssetType> = ItemTypeMap[Type];
 
+/**
+ * Serializable data bundle about freezing an item.
+ */
+export type ItemFreezeBundle = {
+	frozenBy: CharacterId;
+	/** Disallow modifying the name of the frozen item. */
+	freezeName: boolean;
+	/** Disallow modifying the description of the frozen item. */
+	freezeDescription: boolean;
+};
 export const ItemColorBundleSchema = z.record(z.string(), HexRGBAColorStringSchema);
 export type ItemColorBundle = Readonly<z.infer<typeof ItemColorBundleSchema>>;
 
@@ -50,6 +60,7 @@ export type ItemBundle = {
 	color?: ItemColorBundle | HexRGBAColorString[];
 	name?: string;
 	description?: string;
+	frozen?: ItemFreezeBundle;
 	/** Whether free hands are required to interact with this item. */
 	requireFreeHandsToUse?: boolean;
 	moduleData?: Record<string, ItemModuleData>;

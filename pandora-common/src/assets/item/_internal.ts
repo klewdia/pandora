@@ -10,7 +10,7 @@ import type { AssetManager } from '../assetManager.ts';
 import type { AssetColorization, AssetType, WearableAssetType } from '../definitions.ts';
 import type { ItemModuleAction } from '../modules.ts';
 import type { IExportOptions, IItemModule } from '../modules/common.ts';
-import type { ColorGroupResult, IItemLoadContext, IItemValidationContext, Item, ItemBundle, ItemColorBundle, ItemId, ItemTemplate } from './base.ts';
+import type { ColorGroupResult, IItemLoadContext, IItemValidationContext, Item, ItemBundle, ItemFreezeBundle, ItemColorBundle, ItemId, ItemTemplate } from './base.ts';
 import type { AppearanceItems } from './items.ts';
 
 import type { IChatMessageActionItem } from '../../chat/index.ts';
@@ -29,6 +29,7 @@ export interface ItemBaseProps<Type extends AssetType = AssetType> {
 	readonly color: Immutable<ItemColorBundle>;
 	readonly name?: string;
 	readonly description?: string;
+	readonly frozen?: ItemFreezeBundle;
 }
 
 /**
@@ -44,6 +45,7 @@ export abstract class ItemBase<Type extends AssetType = AssetType> implements It
 	public readonly color: Immutable<ItemColorBundle>;
 	public readonly name?: string;
 	public readonly description?: string;
+	public readonly frozen?: ItemFreezeBundle;
 
 	public get type(): Type {
 		return this.asset.type;
@@ -65,6 +67,7 @@ export abstract class ItemBase<Type extends AssetType = AssetType> implements It
 		this.color = overrideProps?.color ?? props.color;
 		this.name = (overrideProps && 'name' in overrideProps) ? overrideProps.name : props.name;
 		this.description = (overrideProps && 'description' in overrideProps) ? overrideProps.description : props.description;
+		this.frozen = (overrideProps && 'frozen' in overrideProps) ? overrideProps.frozen : props.frozen;
 	}
 
 	protected static _parseBundle<Type extends AssetType = AssetType>(asset: Asset<Type>, bundle: ItemBundle, context: IItemLoadContext): ItemBaseProps<Type> {
@@ -77,6 +80,7 @@ export abstract class ItemBase<Type extends AssetType = AssetType> implements It
 			color: ItemBase._loadColorBundle(asset, bundle.color),
 			name: bundle.name,
 			description: bundle.description,
+			frozen: bundle.frozen,
 		};
 	}
 
@@ -116,6 +120,7 @@ export abstract class ItemBase<Type extends AssetType = AssetType> implements It
 			color: this.exportColorToBundle(),
 			name: this.name,
 			description: this.description,
+			frozen: this.frozen,
 			moduleData,
 		};
 	}

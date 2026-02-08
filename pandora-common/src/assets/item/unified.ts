@@ -11,7 +11,7 @@ import { HexRGBAColorStringSchema, ZodArrayWithInvalidDrop, ZodTruncate } from '
 import { AssetIdSchema } from '../base.ts';
 import { CreateModuleDataFromTemplate, ItemModuleDataSchema, ItemModuleTemplateSchema } from '../modules.ts';
 import { PartialAppearancePoseSchema } from '../state/characterStatePose.ts';
-import { GenerateRandomItemId, IItemCreationContext, IItemLoadContext, Item, ItemBundle, ItemColorBundleSchema, ItemIdSchema, ItemTemplate } from './base.ts';
+import { GenerateRandomItemId, IItemCreationContext, IItemLoadContext, Item, ItemBundle, ItemFreezeBundle, ItemColorBundleSchema, ItemIdSchema, ItemTemplate } from './base.ts';
 
 import { LockDataBundleSchema } from '../../gameLogic/locks/lockData.ts';
 import { __internal_InitRecursiveItemSchemas } from './_internalRecursion.ts';
@@ -20,6 +20,12 @@ import { ItemLock } from './lock.ts';
 import { ItemPersonal, PersonalItemBundleSchema, PersonalItemTemplateDataSchema } from './personal.ts';
 import { ItemRoomDevice, RoomDeviceBundleSchema } from './roomDevice.ts';
 import { ItemRoomDeviceWearablePart, RoomDeviceLinkSchema } from './roomDeviceWearablePart.ts';
+
+export const ItemFreezeBundleSchema: z.ZodType<ItemFreezeBundle> = z.object({
+	frozenBy: CharacterIdSchema,
+	freezeName: z.boolean(),
+	freezeDescription: z.boolean(),
+});
 
 /**
  * Serializable data bundle containing information about an item.
@@ -33,6 +39,7 @@ export const ItemBundleSchema: z.ZodType<ItemBundle> = z.object({
 	color: ItemColorBundleSchema.or(z.array(HexRGBAColorStringSchema)).optional(),
 	name: z.string().regex(LIMIT_ITEM_NAME_PATTERN).transform(ZodTruncate(LIMIT_ITEM_NAME_LENGTH)).optional(),
 	description: z.string().transform(ZodTruncate(LIMIT_ITEM_DESCRIPTION_LENGTH)).optional(),
+	frozen: ItemFreezeBundleSchema.optional(),
 	/** Whether free hands are required to interact with this item. */
 	requireFreeHandsToUse: z.boolean().optional(),
 	moduleData: z.record(z.string(), z.lazy(() => ItemModuleDataSchema)).optional(),

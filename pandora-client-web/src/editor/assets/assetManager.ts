@@ -1,6 +1,6 @@
 import { downloadZip, InputWithSizeMeta } from 'client-zip';
 import { Immutable } from 'immer';
-import { Assert, Asset, AssetDefinition, AssetGraphicsDefinition, AssetId, AssetsDefinitionFile, TypedEventEmitter } from 'pandora-common';
+import { Assert, Asset, AssetDefinition, AssetDefinitionFreezeType, AssetGraphicsDefinition, AssetId, AssetsDefinitionFile, TypedEventEmitter } from 'pandora-common';
 import { AssetManagerClient, GetCurrentAssetManager, UpdateAssetManager, useAssetManager } from '../../assets/assetManager.tsx';
 import { DownloadAsFile } from '../../common/downloadHelper.ts';
 import { ObservableClass, ObservableProperty } from '../../observable.ts';
