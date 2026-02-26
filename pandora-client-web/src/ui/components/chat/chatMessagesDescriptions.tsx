@@ -54,6 +54,8 @@ export function DescribeGameLogicAction({ action, ...props }: DescribeGameLogicA
 			return <DescribeGameLogicActionColor action={ action } { ...props } />;
 		case 'customize':
 			return <DescribeGameLogicActionCustomize action={ action } { ...props } />;
+		case 'freeze':
+			return <DescribeGameLogicActionFreeze action={ action } { ...props } />;
 		case 'moduleAction':
 			return <DescribeGameLogicActionModuleAction action={ action } { ...props } />;
 		case 'point':
@@ -185,6 +187,18 @@ function DescribeGameLogicActionCustomize({ action, globalState }: DescribeGameL
 	return (
 		<>
 			Change the { changes } of <DescribeItem item={ item } globalState={ globalState } />
+			{ isPhysicallyEquipped ? ' on' : ' in' } <DescribeContainer target={ action.target } container={ action.item.container } globalState={ globalState } />.
+		</>
+	);
+}
+
+function DescribeGameLogicActionFreeze({ action, globalState }: DescribeGameLogicActionProps<'freeze'>): ReactElement {
+	const isPhysicallyEquipped = ContainerPhysicallyEquips(globalState, action.target, action.item.container);
+	const item = EvalItemPath(globalState.getItems(action.target) ?? [], action.item) ?? action.item.itemId;
+
+	return (
+		<>
+			Freeze <DescribeItem item={ item } globalState={ globalState } />
 			{ isPhysicallyEquipped ? ' on' : ' in' } <DescribeContainer target={ action.target } container={ action.item.container } globalState={ globalState } />.
 		</>
 	);

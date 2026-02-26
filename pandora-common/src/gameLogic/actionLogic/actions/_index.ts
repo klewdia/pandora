@@ -8,6 +8,7 @@ import { ActionBody, AppearanceActionBody } from './body.ts';
 import { ActionColor, AppearanceActionColor } from './color.ts';
 import { ActionCreate, AppearanceActionCreateSchema } from './create.ts';
 import { ActionAppearanceCustomize, AppearanceActionCustomize } from './customize.ts';
+import { ActionAppearanceFreeze, AppearanceActionFreeze } from './freeze.ts';
 import { ActionDelete, AppearanceActionDeleteSchema } from './delete.ts';
 import { ActionModuleAction, AppearanceActionModuleAction } from './moduleAction.ts';
 import { ActionMoveItem, AppearanceActionMoveItem } from './moveItem.ts';
@@ -34,6 +35,7 @@ export const AppearanceActionSchema = z.discriminatedUnion('type', [
 	AppearanceActionMoveItem,
 	AppearanceActionColor,
 	AppearanceActionCustomize,
+	AppearanceActionFreeze,
 	AppearanceActionModuleAction,
 	AppearanceActionPoint,
 	AppearanceActionRestrictionOverrideChange,
@@ -89,6 +91,8 @@ function ApplyActionBase(
 			return ActionColor({ ...arg, action });
 		case 'customize':
 			return ActionAppearanceCustomize({ ...arg, action });
+		case 'freeze':
+			return ActionAppearanceFreeze({ ...arg, action });
 		case 'moduleAction':
 			return ActionModuleAction({ ...arg, action });
 		case 'point':

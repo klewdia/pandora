@@ -231,6 +231,20 @@ export abstract class ItemBase<Type extends AssetType = AssetType> implements It
 		});
 	}
 
+	/** Freeze this item with the passed definition, returning new item with freeze set */
+	public freeze(freeze: ItemFreezeBundle): Item<Type> {
+		return this.withProps({
+			frozen: freeze,
+		});
+	}
+
+	/** Unfreeze this item, returning a new item with no freeze data */
+	public unfreeze(): Item<Type> {
+		return this.withProps({
+			frozen: undefined,
+		});
+	}
+
 	/** Returns a new item with the passed name and description */
 	public customizeName(newName: string): Item<Type> {
 		let name: string | undefined = newName.trim();
