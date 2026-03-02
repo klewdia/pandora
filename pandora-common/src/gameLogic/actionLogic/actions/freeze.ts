@@ -13,7 +13,10 @@ export const AppearanceActionFreeze = z.object({
 	/** Path to the item to change */
 	item: ItemPathSchema,
 	/** The freeze definition object to apply */
-	freeze: ItemFreezeBundleSchema
+	freezeOptions: z.object({
+		freezeName: z.boolean(),
+		freezeDescription: z.boolean(),
+	}),
 });
 
 /** Freeze an item */
@@ -42,8 +45,13 @@ export function ActionAppearanceFreeze({
 	const manipulator = processingContext.manipulator.getManipulatorFor(action.target).getContainer(action.item.container);
 	if (!manipulator.modifyItem(action.item.itemId, (it) => {
 		if ('freeze' in it) {
-			if (action.freeze) {
-				it = it.freeze(action.freeze);
+			if (action.freezeOptions) {
+				let frozenBy = processingContext.getPlayerRestrictionManager().character.id
+				it = it.freeze({
+					frozenBy,
+					freezeName: action.freezeOptions.freezeName,
+					freezeDescription: action.freezeOptions.freezeDescription,
+				});
 			} else {
 				it = it.unfreeze();
 			}

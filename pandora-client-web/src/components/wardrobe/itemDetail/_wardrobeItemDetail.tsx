@@ -9,8 +9,13 @@ import {
 	SplitContainerPath,
 	type ActionRoomSelector,
 	type AppearanceAction,
+	AssetColorization,
+	AssetDefinitionFreezeType,
+	AssetProperties,
+	ModuleType,
 	type Item,
 } from 'pandora-common';
+import { IModuleConfigCommon, IItemModule} from 'pandora-common/assets/modules/common';
 import { ItemModuleLockSlot } from 'pandora-common/assets/modules/lockSlot';
 import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -32,7 +37,7 @@ import { FieldsetToggle } from '../../common/fieldsetToggle/index.tsx';
 import { FormCreateStringValidator } from '../../common/form/form.tsx';
 import { useConfirmDialog } from '../../dialog/dialog.tsx';
 import { WardrobeAssetDetailContent } from '../assetDetail/wardrobeAssetDetail.tsx';
-import { WardrobeModuleConfig } from '../modules/_wardrobeModules.tsx';
+import { WardrobeModuleConfig, WardrobeModuleListValue} from '../modules/_wardrobeModules.tsx';
 import { ActionProblemsContent } from '../wardrobeActionProblems.tsx';
 import { useStaggeredAppearanceActionResult } from '../wardrobeCheckQueue.ts';
 import { WardrobeActionButton } from '../wardrobeComponents.tsx';
@@ -187,6 +192,25 @@ export function WardrobeItemConfigMenu({
 							</WardrobeActionButton>
 						) : null
 					}
+					{
+						(wornItem.frozen) ? (
+							null
+						) : (
+							<WardrobeActionButton
+								action={ {
+									type: 'freeze',
+									target: targetSelector,
+									item,
+									freezeOptions: {
+										freezeName: true,
+										freezeDescription: true,
+									},
+								} }
+							>
+							Freeze item
+							</WardrobeActionButton>
+						)
+					}
 					<WardrobeActionButton
 						action={ {
 							type: 'delete',
@@ -206,6 +230,14 @@ export function WardrobeItemConfigMenu({
 							showAssetInfo={ () => {
 								setShowAssetInfo(true);
 							} }
+						/>
+					) : null
+				}
+				{
+					(wornItem.frozen) ? (
+						<WardrobeItemFrozenInfo
+							item={ wornItem }
+							itemPath={ item }
 						/>
 					) : null
 				}
@@ -456,6 +488,72 @@ function WardrobeItemNameAndDescriptionEdit({ item, itemPath, onEndEdit }: { ite
 					</WardrobeActionButton>
 				</Row>
 			</Column>
+		</FieldsetToggle>
+	);
+}
+
+/**
+ * Get the ReactElement showing the frozen properties and their value.
+ */
+function WardrobeItemFrozenInfo({ item, itemPath }: {
+	item: Item;
+	itemPath: ItemPath;
+}): ReactElement {
+	const { targetSelector } = useWardrobeContext();
+	const assetDef = item.isType('roomDeviceWearablePart') && item.roomDevice != null ? item.roomDevice.asset.definition : item.asset.definition;
+	const frozenNameDescStrings = [];
+	if (item.frozen?.freezeName) {
+		frozenNameDescStrings.push('Custom name');
+	}
+	if (item.frozen?.freezeDescription) {
+		frozenNameDescStrings.push('Description');
+	}
+	const frozenNameDesc = frozenNameDescStrings.length > 0 ? frozenNameDescStrings.join(', ') : undefined;
+	const frozenColors: Record<string, AssetColorization> = {};
+	if (item.frozen && 'colorization' in assetDef && assetDef.colorization) {
+		Object.keys(assetDef.colorization).forEach((key) => {
+			if (assetDef.colorization && assetDef.colorization[key].freezeType === AssetDefinitionFreezeType.SETUP) {
+				frozenColors[key] = assetDef.colorization[key] as AssetColorization;
+			}
+		});
+	}
+	const frozenModules: Record<string, IModuleConfigCommon<ModuleType>> = {};
+	if (item.frozen && 'modules' in assetDef && assetDef.modules && 'modules' in item && item.modules) {
+		Object.keys(assetDef.modules).forEach((key) => {
+			if (assetDef.modules && assetDef.modules[key].freezeType === AssetDefinitionFreezeType.SETUP) {
+				frozenModules[key] = assetDef.modules[key] as IModuleConfigCommon<ModuleType>;
+			}
+		});
+	}
+	return frozenNameDesc || Object.keys(frozenColors).length > 0 || Object.keys(frozenModules).length > 0 ? (
+		<FieldsetToggle legend='Frozen properties'>
+			{
+				frozenNameDesc ? (
+					<div className='div-container direction-row gap-medium' key='namedesc'>
+						{ frozenNameDesc }
+					</div>
+				) : (null)
+			}
+			{
+				Object.entries(frozenColors).map(([key, colorDef]) => (
+					<div className='div-container direction-row gap-medium' key={ key }>
+						<span>{ colorDef.name }:</span>
+						<div className='center-flex'><div className='wardrobeColorLabelFrozen' style={ { backgroundColor: item.color[key] } } /></div>
+						<span className='selectable'>{ item.color[key].toUpperCase() }</span>
+					</div>
+				))
+			}
+			{
+				Object.entries(frozenModules).map(([key, moduleDef]) => {
+					return ('modules' in item && item.modules?.get(key)) ? (
+						<WardrobeModuleListValue target={ targetSelector } item={ itemPath } moduleName={ moduleDef.name } m={ item.modules.get(key) as IItemModule<AssetProperties, undefined> } key={ key } />
+					) : (null);
+				})
+			}
+		</FieldsetToggle>
+	) : (
+		<FieldsetToggle legend='Frozen properties'>
+			<div className='div-container direction-row'><i>None</i></div>
 		</FieldsetToggle>
 	);
 }

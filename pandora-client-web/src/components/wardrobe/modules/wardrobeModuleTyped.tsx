@@ -96,3 +96,12 @@ export function WardrobeModuleTemplateConfigTyped({ definition, template, onTemp
 		</Column>
 	);
 }
+
+export function WardrobeModuleListValueTyped({ moduleName, m }: WardrobeModuleProps<ItemModuleTyped>): ReactElement {
+	return (
+		<div className='div-container direction-row gap-medium'>
+			<span>{ moduleName }:</span>
+			<span>{ m.activeVariant.name }</span>
+		</div>
+	);
+}

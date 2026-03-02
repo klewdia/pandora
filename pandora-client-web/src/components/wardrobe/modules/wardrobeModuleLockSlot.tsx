@@ -163,6 +163,16 @@ export function WardrobeModuleTemplateConfigLockSlot({ template, onTemplateChang
 	);
 }
 
+export function WardrobeModuleListValueLockSlot({ moduleName, m }: WardrobeModuleProps<ItemModuleLockSlot>): ReactElement {
+	const lockName = (m.lock == null) ? 'No lock' : <WardrobeItemName item={ m.lock } />;
+	return (
+		<div className='div-container direction-row gap-medium'>
+			<span>{ moduleName }:</span>
+			<span>{ lockName }</span>
+		</div>
+	);
+}
+
 function WardrobeLockSlotLockDescription({ lock }: {
 	lock: ItemLock;
 }): ReactElement {

@@ -917,6 +917,17 @@ $drop-overlay-gap: 0.3em;
 	margin-bottom: 0.5em;
 }
 
+.wardrobeColorLabelFrozen {
+	// Copied from profileScreens.scss .labelColorMark
+	// Should be widgetized
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	border: 2px solid black; // Intentionally not themed
+	border-radius: 50%;
+	forced-color-adjust: none;
+}
+
 .bone-ui {
 	overflow: auto;
 	padding: 0.5em;

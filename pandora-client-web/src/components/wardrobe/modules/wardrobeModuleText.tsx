@@ -209,3 +209,12 @@ export function WardrobeModuleTemplateConfigText({ template, definition, onTempl
 		</Column>
 	);
 }
+
+export function WardrobeModuleListValueText({ moduleName, m }: WardrobeModuleProps<ItemModuleText>): ReactElement {
+	return (
+		<div className='div-container direction-row gap-medium'>
+			<span>{ moduleName }:</span>
+			<span>{ m.text }</span>
+		</div>
+	);
+}

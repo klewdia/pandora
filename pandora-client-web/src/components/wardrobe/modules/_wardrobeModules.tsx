@@ -6,10 +6,10 @@ import { ItemModuleText } from 'pandora-common/assets/modules/text';
 import { ItemModuleTyped } from 'pandora-common/assets/modules/typed';
 import { ReactElement } from 'react';
 import { WardrobeModuleProps, WardrobeModuleTemplateProps } from '../wardrobeTypes.ts';
-import { WardrobeModuleConfigLockSlot, WardrobeModuleTemplateConfigLockSlot } from './wardrobeModuleLockSlot.tsx';
-import { WardrobeModuleConfigStorage, WardrobeModuleTemplateConfigStorage } from './wardrobeModuleStorage.tsx';
-import { WardrobeModuleConfigText, WardrobeModuleTemplateConfigText } from './wardrobeModuleText.tsx';
-import { WardrobeModuleConfigTyped, WardrobeModuleTemplateConfigTyped } from './wardrobeModuleTyped.tsx';
+import { WardrobeModuleConfigLockSlot, WardrobeModuleTemplateConfigLockSlot, WardrobeModuleListValueLockSlot } from './wardrobeModuleLockSlot.tsx';
+import { WardrobeModuleConfigStorage, WardrobeModuleTemplateConfigStorage, WardrobeModuleListValueStorage } from './wardrobeModuleStorage.tsx';
+import { WardrobeModuleConfigText, WardrobeModuleTemplateConfigText, WardrobeModuleListValueText } from './wardrobeModuleText.tsx';
+import { WardrobeModuleConfigTyped, WardrobeModuleTemplateConfigTyped, WardrobeModuleListValueTyped } from './wardrobeModuleTyped.tsx';
 
 export function WardrobeModuleConfig({ m, ...props }: WardrobeModuleProps<IItemModule>): ReactElement {
 	if (m instanceof ItemModuleTyped) {
@@ -41,4 +41,20 @@ export function WardrobeModuleTemplateConfig({ definition, template, ...props }:
 		return <WardrobeModuleTemplateConfigText { ...props } definition={ definition } template={ template?.type === 'text' ? template : undefined } />;
 	}
 	AssertNever(definition);
+}
+
+export function WardrobeModuleListValue({ m, ...props}: WardrobeModuleProps<IItemModule>): ReactElement {
+	if (m instanceof ItemModuleTyped) {
+		return <WardrobeModuleListValueTyped { ...props } m={ m } />;
+	}
+	if (m instanceof ItemModuleStorage) {
+		return <WardrobeModuleListValueStorage { ...props } m={ m } />;
+	}
+	if (m instanceof ItemModuleLockSlot) {
+		return <WardrobeModuleListValueLockSlot { ...props } m={ m } />;
+	}
+	if (m instanceof ItemModuleText) {
+		return <WardrobeModuleListValueText { ...props } m={ m } />;
+	}
+	return <>[ ERROR: UNKNOWN MODULE TYPE ]</>;
 }
