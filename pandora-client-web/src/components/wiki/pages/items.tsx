@@ -33,6 +33,7 @@ export function WikiItems(): ReactElement {
 				<li><Link to='#IT_Bound_usage'>Bound usage</Link></li>
 				<li><Link to='#IT_Storage_modules'>Storage modules</Link></li>
 				<li><Link to='#IT_Lock_module'>Lock module</Link></li>
+				<li><Link to='#IT_Freezing_items'>Freezing items</Link></li>
 				<li><Link to='#IT_Item_preferences_and_limits'>Item preferences and limits</Link></li>
 				<li><Link to='#IT_Saving_collections'>Saving collections</Link></li>
 				<li><Link to='#IT_Item_layering_order'>Item layering order</Link></li>
@@ -153,6 +154,20 @@ export function WikiItems(): ReactElement {
 				</li>
 			</ul>
 
+			<h4 id='IT_Freezing_items'>Freezing items</h4>
+			<p>
+				Freezing an item prevents the modification of some of its properties, like colors and modules. Those properties are the ones that shouldn't
+				be easily modifiable on the item. For example the size and color of the large couch won't be editable when frozen, but the color of the ropes
+				tied to the wooden pillar could still be changed, as they could be detached and replaced.
+			</p>
+			<p>
+				When freezing an item, you can choose whether some properties can still be edited, like the custom name and the description.
+			</p>
+			<p>
+				Only the creator of an item has the ability to freeze an item, or unfreeze it later on. Frozen items can still be saved into collections,
+				but the new items will be created in the unfrozen state, even if the original was frozen.
+			</p>
+
 			<h4 id='IT_Item_preferences_and_limits'>Item preferences and limits</h4>
 			<p>
 				With the "Item Limits"-tab in the <Link to='/wiki/characters#CH_Character_wardrobe'>wardrobe</Link>, you can set preferences for individual
@@ -257,7 +272,6 @@ export function WikiItems(): ReactElement {
 				high to use them more widely. In case you experience performance issues, especially in rooms with many characters,
 				you could try to go the "Graphics"-tab in Pandora's settings and change or disable the alphamasking engine.
 			</p>
-
 		</>
 	);
 }
