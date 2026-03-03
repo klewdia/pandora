@@ -15,7 +15,7 @@ import {
 	ModuleType,
 	type Item,
 } from 'pandora-common';
-import { IModuleConfigCommon, IItemModule} from 'pandora-common/assets/modules/common';
+import { IModuleConfigCommon, IItemModule } from 'pandora-common/assets/modules/common';
 import { ItemModuleLockSlot } from 'pandora-common/assets/modules/lockSlot';
 import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -37,7 +37,7 @@ import { FieldsetToggle } from '../../common/fieldsetToggle/index.tsx';
 import { FormCreateStringValidator } from '../../common/form/form.tsx';
 import { useConfirmDialog } from '../../dialog/dialog.tsx';
 import { WardrobeAssetDetailContent } from '../assetDetail/wardrobeAssetDetail.tsx';
-import { WardrobeModuleConfig, WardrobeModuleListValue} from '../modules/_wardrobeModules.tsx';
+import { WardrobeModuleConfig, WardrobeModuleListValue } from '../modules/_wardrobeModules.tsx';
 import { ActionProblemsContent } from '../wardrobeActionProblems.tsx';
 import { useStaggeredAppearanceActionResult } from '../wardrobeCheckQueue.ts';
 import { WardrobeActionButton } from '../wardrobeComponents.tsx';
@@ -207,7 +207,7 @@ export function WardrobeItemConfigMenu({
 									},
 								} }
 							>
-							Freeze item
+								Freeze item
 							</WardrobeActionButton>
 						)
 					}

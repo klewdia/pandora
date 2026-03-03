@@ -43,7 +43,7 @@ export function WardrobeModuleTemplateConfig({ definition, template, ...props }:
 	AssertNever(definition);
 }
 
-export function WardrobeModuleListValue({ m, ...props}: WardrobeModuleProps<IItemModule>): ReactElement {
+export function WardrobeModuleListValue({ m, ...props }: WardrobeModuleProps<IItemModule>): ReactElement {
 	if (m instanceof ItemModuleTyped) {
 		return <WardrobeModuleListValueTyped { ...props } m={ m } />;
 	}

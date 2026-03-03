@@ -1,8 +1,6 @@
 import * as z from 'zod';
 
 import { ActionTargetSelectorSchema, ItemPathSchema } from '../../../assets/appearanceTypes.ts';
-import { PersonalItemDeploymentAutoDeploySchema } from '../../../assets/item/personal.ts';
-import { ItemFreezeBundleSchema } from '../../../assets/item/unified.ts';
 import type { AppearanceActionProcessingResult } from '../appearanceActionProcessingContext.ts';
 import type { AppearanceActionHandlerArg } from './_common.ts';
 
@@ -46,7 +44,7 @@ export function ActionAppearanceFreeze({
 	if (!manipulator.modifyItem(action.item.itemId, (it) => {
 		if ('freeze' in it) {
 			if (action.freezeOptions) {
-				let frozenBy = processingContext.getPlayerRestrictionManager().character.id
+				const frozenBy = processingContext.getPlayerRestrictionManager().character.id;
 				it = it.freeze({
 					frozenBy,
 					freezeName: action.freezeOptions.freezeName,

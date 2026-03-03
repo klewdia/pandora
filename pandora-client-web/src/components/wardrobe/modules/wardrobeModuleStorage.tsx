@@ -72,7 +72,7 @@ export function WardrobeModuleTemplateConfigStorage({ template }: WardrobeModule
 }
 
 export function WardrobeModuleListValueStorage({ moduleName, m }: WardrobeModuleProps<ItemModuleStorage>): ReactElement {
-	const contentNames = m.getContents().map(c => c.name);
+	const contentNames = m.getContents().map((c) => c.name);
 	const nameList = contentNames.join(', ');
 	return (
 		<div className='div-container direction-row gap-medium'>
