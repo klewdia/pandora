@@ -4,6 +4,7 @@ import {
 	AppearanceAction,
 	AppearanceItems,
 	AssetColorization,
+	AssetDefinitionFreezeType,
 	CloneDeepMutable,
 	ColorGroupResult,
 	Item,
@@ -20,6 +21,10 @@ import { useStaggeredAppearanceActionResult } from '../wardrobeCheckQueue.ts';
 import { useWardrobeContext } from '../wardrobeContext.tsx';
 import { useWardrobeTargetItems } from '../wardrobeUtils.ts';
 
+/**
+ * Get the ReactElement showing the editable colors.
+ * Frozen setup colors are omitted, returns null when no color is available.
+ */
 export function WardrobeItemColorization({ wornItem, item }: {
 	wornItem: Item<'bodypart' | 'personal' | 'roomDevice'>;
 	item: ItemPath;
@@ -36,10 +41,25 @@ export function WardrobeItemColorization({ wornItem, item }: {
 	if (!wornItem.asset.definition.colorization || Object.entries(wornItem.asset.definition.colorization).every(([,colorization]) => colorization.name == null))
 		return null;
 
-	return (
+	const assetColorization = wornItem.asset.definition.colorization || {}; // or {} to stop complaining about undefined checked above
+	const editableColors: Record<string, AssetColorization> = {};
+	if (wornItem.frozen) {
+		Object.keys(assetColorization).forEach((key) => {
+			if (assetColorization[key].freezeType !== AssetDefinitionFreezeType.SETUP) {
+				editableColors[key] = assetColorization[key] as AssetColorization;
+			}
+		});
+	} else {
+		Object.keys(assetColorization).forEach((key) => {
+			if (assetColorization[key]) {
+				editableColors[key] = assetColorization[key] as AssetColorization;
+			}
+		});
+	}
+	return Object.keys(editableColors).length > 0 ? (
 		<FieldsetToggle legend='Coloring' className='coloring'>
 			{
-				Object.entries(wornItem.asset.definition.colorization).map(([colorPartKey, colorPart]) => (
+				Object.entries(editableColors).map(([colorPartKey, colorPart]) => (
 					<WardrobeColorInput
 						key={ colorPartKey }
 						colorKey={ colorPartKey }
@@ -51,7 +71,7 @@ export function WardrobeItemColorization({ wornItem, item }: {
 				))
 			}
 		</FieldsetToggle>
-	);
+	) : null;
 }
 
 function WardrobeColorInput({ colorKey, colorDefinition, allItems, overrideGroup, action, item }: {

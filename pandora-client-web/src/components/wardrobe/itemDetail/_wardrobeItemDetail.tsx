@@ -99,6 +99,19 @@ export function WardrobeItemConfigMenu({
 			</div>
 		);
 	}
+	const wornItemAssetDef = wornItem.isType('roomDeviceWearablePart') && wornItem.roomDevice != null ? wornItem.roomDevice.asset.definition : wornItem.asset.definition;
+	const editableModules: Map<string, IItemModule> = new Map();
+	if (wornItem.frozen && 'modules' in wornItemAssetDef && wornItemAssetDef.modules && 'modules' in wornItem && wornItem.modules) {
+		Object.keys(wornItemAssetDef.modules).forEach((key) => {
+			if (wornItemAssetDef.modules && wornItemAssetDef.modules[key].freezeType !== AssetDefinitionFreezeType.SETUP) {
+				if (wornItem.getModules().get(key) !== undefined) {
+					editableModules.set(key, wornItem.getModules().get(key) as IItemModule);
+				}
+			}
+		});
+	} else {
+		Object.keys(wornItem.getModules()).forEach((key) => editableModules.set(key, wornItem.getModules().get(key) as IItemModule));
+	}
 
 	if (showAssetInfo) {
 		const infoAsset = wornItem.isType('roomDeviceWearablePart') && wornItem.roomDevice != null ? wornItem.roomDevice.asset : wornItem.asset;
@@ -259,7 +272,7 @@ export function WardrobeItemConfigMenu({
 				{ wornItem.isType('roomDeviceWearablePart') ? (
 					<WardrobeRoomDeviceWearable roomDeviceWearable={ wornItem } item={ item } room={ room } />
 				) : null }
-				{ Array.from(wornItem.getModules().entries())
+				{ Array.from(editableModules.entries())
 					.map(([moduleName, m]) => (
 						<FieldsetToggle legend={ `Module: ${m.config.name}` } key={ moduleName }>
 							<WardrobeModuleConfig target={ targetSelector } item={ item } moduleName={ moduleName } m={ m } />
